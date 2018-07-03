@@ -2,39 +2,41 @@ package com.develogical.camera;
 
 public class Camera {
 
-    Sensor sensor;
-    MemoryCard card;
+    private final Sensor sensor;
+    private final MemoryCard card;
 
-    private boolean state; //state of true = on; false = off;
-    private boolean readState; //true = actively reading, false = done
+    private boolean isOn; //state of true = on; false = off;
+    private boolean isWriting; //true = actively reading, false = done
 
 
     public Camera(Sensor sensor, MemoryCard card) {
         this.sensor = sensor;
         this.card = card;
-        state = false;
-        readState = false;
+        isOn = false;
+        isWriting = false;
     }
 
     public void pressShutter() {
-        if (state) {
-            readState = true;
+        if (isOn) {
+            isWriting = true;
             card.write(sensor.readData(), () -> {
-                readState = false;
+                isWriting = false;
+                if (!isOn)
+                    sensor.powerDown();
             });
         }
     }
 
     public void powerOn() {
         sensor.powerUp();
-        state = true;
+        isOn = true;
     }
 
     public void powerOff() {
-        if (!readState) {
+        if (!isWriting) {
             sensor.powerDown();
-            state = false;
         }
+            isOn = false;
     }
 }
 
