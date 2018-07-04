@@ -28,7 +28,7 @@ public class CameraTest {
         Sensor sensor = mock(Sensor.class);
         MemoryCard memoryCard = mock(MemoryCard.class);
         Camera myCamera = new Camera(sensor, memoryCard);
-        myCamera.powerOn(); // TODO: ask if there is a "verify not called" function if camera isn't on
+        myCamera.powerOn();
         myCamera.pressShutter();
         verify(sensor).readData();
         verify(memoryCard).write(any(), any());  //verify that is told to write but don't care which paramater
